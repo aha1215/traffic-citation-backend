@@ -9,19 +9,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    // TODO: Change string to "RemoteConnection" to use remote database (on App Harbor)
-    options.UseSqlServer(builder.Configuration.GetConnectionString("RemoteConnection"));
-});
 
-// Use same origin as angular app
+/* Note: "RemoteConnection" to use remote database (on App Harbor)
+         "LocalConnection" to use local database 
+         Registers context using dependency injection
+*/
+builder.Services.AddDbContext<CitationContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
+
+// Use same origin as angular app (can add more later)
 builder.Services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins",
-    policy =>
-    {
-        // Which origins the api accepts, can add more...
-        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-    }));
+    policy => policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 

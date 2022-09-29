@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CitationWebAPI.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(CitationContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

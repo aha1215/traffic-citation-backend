@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CitationWebAPI.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(CitationContext))]
     [Migration("20220927035335_Initial")]
     partial class Initial
     {
