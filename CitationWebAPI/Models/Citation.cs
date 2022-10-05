@@ -1,5 +1,7 @@
 ﻿
+using DateOnlyTimeOnly.AspNet.Converters;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 /**
 * A citation entity
 */
@@ -17,7 +19,7 @@ namespace CitationWebAPI.Models
         public bool owner_fault { get; set; }
         public string desc { get; set; } = String.Empty;
         public string violation_loc { get; set; } = String.Empty;
-        public TimeOnly? sign_date { get; set; }
+        public DateOnly? sign_date { get; set; }
         public string vin { get; set; } = String.Empty;
         public string vin_state { get; set; } = String.Empty;
         public string code_section { get; set; } = String.Empty;

@@ -55,8 +55,8 @@ namespace CitationWebAPI.Migrations
                     b.Property<bool>("owner_fault")
                         .HasColumnType("bit");
 
-                    b.Property<TimeSpan?>("sign_date")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("sign_date")
+                        .HasColumnType("date");
 
                     b.Property<TimeSpan?>("time")
                         .HasColumnType("time");

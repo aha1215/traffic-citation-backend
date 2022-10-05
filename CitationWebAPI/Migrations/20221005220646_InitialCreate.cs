@@ -25,7 +25,7 @@ namespace CitationWebAPI.Migrations
                     ownerfault = table.Column<bool>(name: "owner_fault", type: "bit", nullable: false),
                     desc = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     violationloc = table.Column<string>(name: "violation_loc", type: "nvarchar(max)", nullable: false),
-                    signdate = table.Column<TimeSpan>(name: "sign_date", type: "time", nullable: true),
+                    signdate = table.Column<DateTime>(name: "sign_date", type: "date", nullable: true),
                     vin = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     vinstate = table.Column<string>(name: "vin_state", type: "nvarchar(max)", nullable: false),
                     codesection = table.Column<string>(name: "code_section", type: "nvarchar(max)", nullable: false),

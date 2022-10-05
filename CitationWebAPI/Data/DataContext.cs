@@ -20,7 +20,6 @@ namespace CitationWebAPI.Data
         public DbSet<Driver> Drivers => Set<Driver>();
         public DbSet<User> Users => Set<User>();
 
-        // For converting DateOnly type
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
             builder.Properties<DateOnly>()
