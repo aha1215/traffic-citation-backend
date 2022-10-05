@@ -10,8 +10,8 @@ namespace CitationWebAPI.Controllers
     [ApiController]
     public class CitationController : ControllerBase
     {
-        private readonly CitationContext _context;
-        public CitationController(CitationContext context)
+        private readonly DataContext _context;
+        public CitationController(DataContext context)
         {
             _context = context;
         }
@@ -35,11 +35,23 @@ namespace CitationWebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<List<Citation>>> UpdateCitation(Citation citation)
         {
-            var dbCitation = await _context.Citations.FindAsync(citation.Id); // Check if citation already exists in database
+            var dbCitation = await _context.Citations.FindAsync(citation.citation_id); // Check if citation already exists in database
             if (dbCitation == null)
                 return BadRequest("Citation not found.");
 
-            dbCitation.Name = citation.Name;
+            // Not updating driver id or user id here. Should have been set when citation created
+            dbCitation.type = citation.type;
+            dbCitation.date = citation.date;
+            dbCitation.time = citation.time;
+            dbCitation.owner_fault = citation.owner_fault;
+            dbCitation.desc = citation.desc;
+            dbCitation.violation_loc = citation.violation_loc;
+            dbCitation.sign_date = citation.sign_date;
+            dbCitation.vin = citation.vin;
+            dbCitation.vin_state = citation.vin_state;
+            dbCitation.code_section = citation.code_section;
+            dbCitation.officer_name = citation.officer_name;
+            dbCitation.officer_badge = citation.officer_badge;
 
             await _context.SaveChangesAsync(); // Save updated citation
 
