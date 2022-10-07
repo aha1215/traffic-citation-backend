@@ -30,9 +30,9 @@ jobs:
       - uses: NuGet/setup-nuget@v1.0.7
       
       - name: Restore NuGet packages
-      - run: nuget restore CitationWebAPI.sln
+        run: nuget restore CitationWebAPI.sln
       
       - name: Build Solution
-      - run: msbuild CitationWebAPI.sln
+        run: msbuild CitationWebAPI.sln
       
       
