@@ -18,8 +18,12 @@ builder.Services.AddDbContext<CitationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
 
 // Use same origin as angular app (can add more later)
-builder.Services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins",
-    policy => policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()));
+builder.Services.AddCors(opt => opt.AddPolicy(
+    name: "CitationOrigins", policy => policy
+    .WithOrigins("http://localhost:4200", "https://traffic-citation-frontend.herokuapp.com")
+    .AllowAnyMethod()
+    .AllowAnyHeader())); 
+    
 
 var app = builder.Build();
 
