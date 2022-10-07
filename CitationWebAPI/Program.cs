@@ -1,19 +1,18 @@
-using CitationWebAPI.Converters;
 using CitationWebAPI.Data;
-using DateOnlyTimeOnly.AspNet.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
-using DateOnlyJsonConverter = DateOnlyTimeOnly.AspNet.Converters.DateOnlyJsonConverter;
-using TimeOnlyJsonConverter = DateOnlyTimeOnly.AspNet.Converters.TimeOnlyJsonConverter;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-
-//builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services
+    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+
 builder.Services.AddSwaggerGen(options =>
     options.MapType<DateOnly>(() => new Microsoft.OpenApi.Models.OpenApiSchema
     {
@@ -28,7 +27,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Type = "string",
         Format = "time",
-        Example = new OpenApiString("HH:mm:ss")
+        Example = new OpenApiString("23:15:00")
     })
 );
 
@@ -43,10 +42,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Add heroku here
 builder.Services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins",
     policy => policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()));
-
-builder.Services
-    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
-    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
 var app = builder.Build();
 
