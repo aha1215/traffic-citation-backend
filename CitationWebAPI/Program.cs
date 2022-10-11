@@ -1,11 +1,11 @@
 using CitationWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
+using System.Text.RegularExpressions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -31,12 +31,20 @@ builder.Services.AddSwaggerGen(options =>
     })
 );
 
-/* Note: "RemoteConnection" to use remote database (on App Harbor)
-         "LocalConnection" to use local database 
-         Registers context using dependency injection
-*/
+
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
+{
+    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+    {
+        var m = Regex.Match(Environment.GetEnvironmentVariable("RemoteConnection")!, @"postgres://(.*):(.*)@(.*):(.*)/(.*)");
+        options.UseNpgsql($"Server={m.Groups[3]};Port={m.Groups[4]};User Id={m.Groups[1]};Password={m.Groups[2]};Database={m.Groups[5]};sslmode=Prefer;Trust Server Certificate=true");
+    }
+    else // In Development Environment
+    {
+        // So, use a local Connection
+        options.UseNpgsql(builder.Configuration.GetConnectionString("LocalConnection"));
+    }
+});
 
 // Use same origin as angular app (can add more later)
 builder.Services.AddCors(opt => opt.AddPolicy(
