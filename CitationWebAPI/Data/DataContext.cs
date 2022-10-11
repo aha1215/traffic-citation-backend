@@ -19,8 +19,6 @@ namespace CitationWebAPI.Data
         public DbSet<Driver> Drivers => Set<Driver>();
         public DbSet<User> Users => Set<User>();
 
-        public DbSet<Violations> Violations => Set<Violations>();    
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseSerialColumns();
