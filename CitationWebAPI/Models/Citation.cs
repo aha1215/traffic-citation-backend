@@ -26,5 +26,6 @@ namespace CitationWebAPI.Models
         public string code_section { get; set; } = String.Empty;
         public string officer_name { get; set; } = String.Empty;
         public string officer_badge { get; set; } = String.Empty;
+
     }
 }

@@ -4,16 +4,13 @@
 
 namespace CitationWebAPI.Migrations
 {
-    /// <inheritdoc />
-    public partial class changeType2 : Migration
+    public partial class AddUserAndDriver : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
 

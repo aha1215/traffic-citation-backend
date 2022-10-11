@@ -2,9 +2,8 @@
 using CitationWebAPI.Converters;
 using CitationWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 
-/**
+/*
  * Translate request objects into SQL queries. Conduit to connect database.
  * 
  */
@@ -20,6 +19,11 @@ namespace CitationWebAPI.Data
         public DbSet<Driver> Drivers => Set<Driver>();
         public DbSet<User> Users => Set<User>();
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.UseSerialColumns();
+        }
+        
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
             builder.Properties<DateOnly>()
