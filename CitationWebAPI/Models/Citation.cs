@@ -14,6 +14,7 @@ namespace CitationWebAPI.Models
         public int citation_id { get; set; }
         public int driver_id { get; set; }
         public int user_id { get; set; }
+        public int violations_id { get; set; }
         public string type { get; set; } = String.Empty;
         public DateOnly? date { get; set; }
         public TimeOnly? time { get; set; }
@@ -26,5 +27,6 @@ namespace CitationWebAPI.Models
         public string code_section { get; set; } = String.Empty;
         public string officer_name { get; set; } = String.Empty;
         public string officer_badge { get; set; } = String.Empty;
+
     }
 }
