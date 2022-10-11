@@ -15,22 +15,22 @@ CI/CD pipeline. Deployed on Heroku. [Using Jincod .NET Core Buildpack](https://g
 https://traffic-citation-backend.herokuapp.com<br>
 
 ### Citation
-GET - Retrieves all citations<br>
+GET - Retrieve all citations<br>
 /api/Citation<br>
 
-POST - Creates a Citation<br>
+POST - Create a citation<br>
 /api/Citation<br>
 
-PUT - Upates a Citation<br>
+PUT - Update a citation<br>
 /api/Citation<br>
 
-DELETE - Deletes a citation by id<br>
+DELETE - Delete a citation by id<br>
 /api/Citation/{id}<br>
 
 <hr>
 
 ### Driver
-GET - Retrieves all drivers<br>
+GET - Retrieve all drivers<br>
 /api/Driver<br>
 
 POST - Create a driver<br>
@@ -39,16 +39,16 @@ POST - Create a driver<br>
 PUT - Update a driver<br>
 /api/Driver<br>
 
-GET - Retrieves driver by id<br>
+GET - Retrieve driver by id<br>
 /api/Driver/{id}<br>
 
-DELETE - Deletes a driver by id<br>
+DELETE - Delete a driver by id<br>
 /api/Driver/{id}<br>
 
 <hr>
 
 ### User
-GET - Retrieves all users<br>
+GET - Retrieve all users<br>
 /api/User<br>
 
 POST - Create a new user<br>
@@ -57,7 +57,7 @@ POST - Create a new user<br>
 PUT - Update a user<br>
 /api/User<br>
 
-DELETE - Deletes a user by id<br>
+DELETE - Delete a user by id<br>
 /api/User/{id}<br>
 
 <hr>
