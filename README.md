@@ -1,5 +1,5 @@
 
-# Overview
+# Introduction
 A .NET 6 Web API to be used with our [Angular application](https://github.com/PedroG1018/Capstone-FA22-Traffic-Citation-Web-Interface)<br>
 
 Frameworks: Entity Framework Core (Object Database Mapper) <br>
