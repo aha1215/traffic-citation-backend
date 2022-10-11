@@ -4,7 +4,7 @@ A .NET 6 Web API back-end to be used with our [Angular application](https://gith
 
 Frameworks: Entity Framework Core (Object Database Mapper) <br>
 Database: PostgreSQL<br>
-CI/CD pipeline. Deployed on Heroku.<br>
+CI/CD pipeline. Deployed on Heroku. [Using Jincod Dotnet Buildtools](https://github.com/jincod/dotnetcore-buildpack)<br>
 
 ## Database ERD
 ![ERD](https://user-images.githubusercontent.com/80275985/195202268-a12f1d8e-c8b2-4fc2-8b99-d4ef61c3629b.png)
