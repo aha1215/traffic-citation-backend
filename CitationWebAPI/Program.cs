@@ -49,7 +49,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Use same origin as angular app (can add more later)
 builder.Services.AddCors(opt => opt.AddPolicy(
     name: "CitationOrigins", policy => policy
-    .WithOrigins("http://localhost:4200", "https://traffic-citation-frontend.herokuapp.com")
+    .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com")
     .AllowAnyMethod()
     .AllowAnyHeader())); 
     
