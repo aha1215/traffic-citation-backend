@@ -18,6 +18,9 @@ https://traffic-citation-backend.herokuapp.com<br>
 GET - Retrieve all citations<br>
 /api/Citation<br>
 
+GET - Retrieve citations based on page number and page size<br>
+/api/Citation/{pageNumber}/{pageSize}<br>
+
 POST - Create a citation<br>
 /api/Citation<br>
 
