@@ -18,7 +18,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Citation>>> GetAllCitations(int page)
+        public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
             {
