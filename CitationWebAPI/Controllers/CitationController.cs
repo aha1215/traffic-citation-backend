@@ -1,4 +1,5 @@
 ﻿using CitationWebAPI.Data;
+using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,46 @@ namespace CitationWebAPI.Controllers
             _context = context;
         }
 
-        // Request all citations from database
         [HttpGet]
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
             {
                 return Ok(await _context.Citations.ToListAsync());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // Request a range of citations for pagination
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize)
+        {
+            try
+            {
+                // If requesting more than 50 pages default to 50
+                pageSize = pageSize > 50 ? 50 : pageSize;
+                // Page number must be greater than 0
+                pageNumber = pageNumber < 1 ? 1 : pageNumber + 1;
+
+                var totalCitationsCount = await _context.Citations.CountAsync();
+                var pageCount = Math.Ceiling(_context.Citations.Count() / pageSize);
+                var citations = await _context.Citations
+                    .Skip((pageNumber - 1) * (int)pageSize)
+                    .Take((int)pageSize)
+                    .ToListAsync();
+
+                var response = new CitationResponse
+                {
+                    Citations = citations,
+                    TotalCitationsCount = totalCitationsCount,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)pageCount
+                };
+
+                return Ok(response);
             }
             catch (Exception e) 
             {
