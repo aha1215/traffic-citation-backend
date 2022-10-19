@@ -42,7 +42,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     else // In Development Environment
     {
         // So, use a local Connection
-        options.UseNpgsql(builder.Configuration.GetConnectionString("LocalConnection"));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteConnection"));
     }
 });
 
