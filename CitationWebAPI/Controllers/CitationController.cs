@@ -80,6 +80,31 @@ namespace CitationWebAPI.Controllers
             
         }
 
+        [HttpPost("/api/CitationWithViolations")]
+        public async Task<ActionResult<List<Citation>>> CreateCitationWithViolations(CitationWithViolations citation)
+        {
+            try
+            {
+                _context.Citations.Add(citation.citation);
+                await _context.SaveChangesAsync();
+
+                int citation_id = citation.citation.citation_id; // should have newly created citation id
+
+                foreach (var violation in citation.violations)
+                {
+                    violation.citation_id = citation_id;
+                    _context.Violations.Add(violation);
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(await _context.Citations.ToListAsync());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut]
         public async Task<ActionResult<List<Citation>>> UpdateCitation(Citation citation)
         {

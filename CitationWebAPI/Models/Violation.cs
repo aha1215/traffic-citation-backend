@@ -15,7 +15,7 @@ public class Violation
     public int citation_id { get; set; }
     public string group { get; set; } = String.Empty;
     public string code { get; set; } = String.Empty;
-    public char degree { get; set; }
+    public string degree { get; set; } = String.Empty;
     public string desc { get; set; } = String.Empty;
 }
 
