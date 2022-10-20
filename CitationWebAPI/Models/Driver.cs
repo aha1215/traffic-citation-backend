@@ -1,5 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+/**
+* Defines properties for a driver that will be stored in database
+* Used by Entity Framework Core
+*/
+
 namespace CitationWebAPI.Models
 {
     public class Driver

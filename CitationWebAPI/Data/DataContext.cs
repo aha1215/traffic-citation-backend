@@ -14,7 +14,7 @@ namespace CitationWebAPI.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-        // To see entity as a table in the database add here
+        // Create entity set (table) used by Entity Framework Core
         public DbSet<Citation> Citations => Set<Citation>();
         public DbSet<Driver> Drivers => Set<Driver>();
         public DbSet<User> Users => Set<User>();

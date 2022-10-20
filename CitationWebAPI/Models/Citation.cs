@@ -1,11 +1,11 @@
 ﻿
-using DateOnlyTimeOnly.AspNet.Converters;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+
 /**
-* A citation entity
+* Defines properties for a citation that will be stored in database
+* Used by Entity Framework Core
 */
+
 namespace CitationWebAPI.Models
 {
     public class Citation
@@ -26,6 +26,5 @@ namespace CitationWebAPI.Models
         public string code_section { get; set; } = String.Empty;
         public string officer_name { get; set; } = String.Empty;
         public string officer_badge { get; set; } = String.Empty;
-
     }
 }

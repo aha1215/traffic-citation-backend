@@ -1,7 +1,6 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
