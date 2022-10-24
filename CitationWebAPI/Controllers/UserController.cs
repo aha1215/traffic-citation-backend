@@ -53,7 +53,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbUser = await _context.Users.FindAsync(user.user_id); // Check if user already exists in database
                 if (dbUser == null)
-                    return BadRequest("User not found.");
+                    return NotFound("User not found.");
 
                 dbUser.username = user.username;
                 dbUser.password = user.password;
@@ -79,7 +79,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbUser = await _context.Users.FindAsync(id);
                 if (dbUser == null)
-                    return BadRequest("User not found.");
+                    return NotFound("User not found.");
 
                 _context.Users.Remove(dbUser); // Delete user
                 await _context.SaveChangesAsync();

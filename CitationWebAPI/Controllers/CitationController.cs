@@ -112,7 +112,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbCitation = await _context.Citations.FindAsync(citation.citation_id); // Check if citation already exists in database
                 if (dbCitation == null)
-                    return BadRequest("Citation not found.");
+                    return NotFound("Citation not found.");
 
                 // Not updating driver id or user id here. Should have been set when citation created
                 dbCitation.type = citation.type;
@@ -146,7 +146,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbCitation = await _context.Citations.FindAsync(id);
                 if (dbCitation == null)
-                    return BadRequest("Citation not found.");
+                    return NotFound("Citation not found.");
 
                 _context.Citations.Remove(dbCitation); // Delete citation
                 await _context.SaveChangesAsync();
