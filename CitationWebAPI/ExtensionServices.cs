@@ -31,7 +31,7 @@ namespace CitationWebAPI
         public static void ConfigureCors(this IServiceCollection services)
         {
             services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins", policy => policy
-            .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com")
+            .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190")
             .AllowAnyMethod()
             .AllowAnyHeader()));
         }
