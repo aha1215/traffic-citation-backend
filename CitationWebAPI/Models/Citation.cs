@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 /**
 * Defines properties for a citation that will be stored in database
@@ -11,6 +12,7 @@ namespace CitationWebAPI.Models
     public class Citation
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int citation_id { get; set; }
         public int driver_id { get; set; }
         public int user_id { get; set; }

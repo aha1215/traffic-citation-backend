@@ -66,14 +66,16 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Driver>>> CreateDriver(Driver driver)
+        public async Task<ActionResult<Driver>> CreateDriver(Driver driver)
         {
             try
             {
                 _context.Drivers.Add(driver);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Drivers.ToListAsync());
+                var createdDriver = await _context.Drivers.FirstOrDefaultAsync(nDriver => nDriver.driver_id == driver.driver_id);
+
+                return Ok(createdDriver);
             }
             catch (Exception e)
             {
