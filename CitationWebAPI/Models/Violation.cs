@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 namespace CitationWebAPI.Models;
 
@@ -11,6 +12,7 @@ namespace CitationWebAPI.Models;
 public class Violation
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int violation_id { get; set; }
     public int citation_id { get; set; }
     public string group { get; set; } = String.Empty;
