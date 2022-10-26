@@ -85,7 +85,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Driver>>> UpdateDriver(Driver driver)
+        public async Task<ActionResult<Driver>> UpdateDriver(Driver driver)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace CitationWebAPI.Controllers
 
                 await _context.SaveChangesAsync(); // Save updated driver
 
-                return Ok(await _context.Drivers.ToListAsync());
+                return Ok(dbDriver);
             }
             catch (Exception e)
             {
