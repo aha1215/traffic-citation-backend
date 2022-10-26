@@ -54,7 +54,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbViolation = await _context.Violations.FindAsync(violation.violation_id);
                 if (dbViolation == null)
-                    return BadRequest("Violation not found.");
+                    return NotFound("Violation not found.");
 
                 // Not updating citation id here. Should have been set when violation was created
                 dbViolation.group = violation.group;
@@ -79,7 +79,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbViolation = await _context.Violations.FindAsync(id);
                 if (dbViolation == null)
-                    return BadRequest("Violation not found.");
+                    return NotFound("Violation not found.");
 
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();

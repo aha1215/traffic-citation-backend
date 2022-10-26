@@ -4,8 +4,9 @@ using System.Text.Json.Serialization;
 namespace CitationWebAPI.Models;
 
 /**
- * A violation entity
- */
+* Defines properties for a violation that will be stored in database
+* Used by Entity Framework Core
+*/
 
 public class Violation
 {

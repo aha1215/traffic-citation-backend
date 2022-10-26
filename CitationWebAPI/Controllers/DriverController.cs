@@ -29,6 +29,25 @@ namespace CitationWebAPI.Controllers
             }
         }
 
+        [HttpGet("license/{license_no}")]
+        public async Task<ActionResult<Driver>> GetDriverByLicenseNo(string license_no)
+        {
+            try
+            {
+                var dbDriver = await _context.Drivers.FirstOrDefaultAsync(driver => driver.license_no == license_no);
+                if (dbDriver == null)
+                {
+                    // Driver doesn't exist
+                    return NotFound("Driver not found.");
+                }
+                return Ok(dbDriver);
+
+            } catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Driver>> GetDriverById(int id)
         {
@@ -47,7 +66,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<User>>> CreateDriver(Driver driver)
+        public async Task<ActionResult<List<Driver>>> CreateDriver(Driver driver)
         {
             try
             {
@@ -70,7 +89,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbDriver = await _context.Drivers.FindAsync(driver.driver_id); // Check if driver already exists in database
                 if (dbDriver == null)
-                    return BadRequest("Driver not found.");
+                    return NotFound("Driver not found.");
 
                 dbDriver.driver_name = driver.driver_name;
                 dbDriver.date_birth = driver.date_birth;
@@ -105,7 +124,7 @@ namespace CitationWebAPI.Controllers
             {
                 var dbDriver = await _context.Drivers.FindAsync(id);
                 if (dbDriver == null)
-                    return BadRequest("Driver not found.");
+                    return NotFound("Driver not found.");
 
                 _context.Drivers.Remove(dbDriver); // Delete driver
                 await _context.SaveChangesAsync();
