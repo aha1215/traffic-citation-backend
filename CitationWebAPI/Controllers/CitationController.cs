@@ -47,9 +47,21 @@ namespace CitationWebAPI.Controllers
                     .Take((int)pageSize)
                     .ToListAsync();
 
+                // Get the drivers associated with each citation
+                var drivers = new List<Driver>();
+                foreach (var element in citations)
+                {
+                    var driver = _context.Drivers.FindAsync(element.driver_id);
+                    if (driver.Result != null)
+                    {
+                        drivers.Add(driver.Result);
+                    }
+                }
+
                 var response = new CitationResponse
                 {
                     Citations = citations,
+                    Drivers = drivers,
                     TotalCitationsCount = totalCitationsCount,
                     CurrentPage = pageNumber,
                     TotalPages = (int)pageCount
