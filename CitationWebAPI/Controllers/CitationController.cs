@@ -112,7 +112,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
-        public async Task<ActionResult<List<Citation>>> CreateCitationWithViolations(CitationWithViolations citation)
+        public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
             {
@@ -120,6 +120,7 @@ namespace CitationWebAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 int citation_id = citation.citation.citation_id; // should have newly created citation id
+                var createdCitation = await _context.Citations.FirstOrDefaultAsync(nCitation => nCitation.citation_id == citation_id);
 
                 foreach (var violation in citation.violations)
                 {
@@ -128,7 +129,7 @@ namespace CitationWebAPI.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return Ok(await _context.Citations.ToListAsync());
+                return Ok(createdCitation);
             }
             catch (Exception e)
             {
