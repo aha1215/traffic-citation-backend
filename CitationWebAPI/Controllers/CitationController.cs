@@ -16,6 +16,7 @@ namespace CitationWebAPI.Controllers
             _context = context;
         }
 
+        // Get all citations
         [HttpGet]
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
@@ -26,6 +27,24 @@ namespace CitationWebAPI.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        // Get citation by id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Citation>> GetCitationById(int id)
+        {
+            try
+            {
+                var dbCitation = await _context.Citations.FindAsync(id);
+                if (dbCitation == null)
+                    return NotFound("Citation not found.");
+
+                return Ok(dbCitation);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
             }
         }
 

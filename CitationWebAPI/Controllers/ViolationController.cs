@@ -30,6 +30,23 @@ namespace CitationWebAPI.Controllers
             }
         }
 
+        [HttpGet("{citation_id}")]
+        public async Task<ActionResult<List<Violation>>> GetViolationsByCitationId(int citation_id)
+        {
+            try
+            {
+                var dbViolations = await _context.Violations.Where(nViolation => nViolation.citation_id == citation_id).ToListAsync();
+                if (dbViolations == null)
+                    return NotFound("Citation not found.");
+
+                return Ok(dbViolations);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
         // Posts a new violation to database
         [HttpPost]
         public async Task<ActionResult<List<Violation>>> CreateViolation(Violation violation)
