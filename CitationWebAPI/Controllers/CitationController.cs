@@ -95,14 +95,16 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Citation>>> CreateCitation(Citation citation)
+        public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
             {
                 _context.Citations.Add(citation);
                 await _context.SaveChangesAsync(); // Adds citation to database
 
-                return Ok(await _context.Citations.ToListAsync());
+                var createdCitation = await _context.Citations.FirstOrDefaultAsync(nCitation => nCitation.citation_id == citation.citation_id);
+
+                return Ok(createdCitation);
             } 
             catch (Exception e)
             {
@@ -138,7 +140,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Citation>>> UpdateCitation(Citation citation)
+        public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
             {
@@ -162,7 +164,9 @@ namespace CitationWebAPI.Controllers
 
                 await _context.SaveChangesAsync(); // Save updated citation
 
-                return Ok(await _context.Citations.ToListAsync());
+                var updatedCitation = await _context.Citations.FirstOrDefaultAsync(nCitation => nCitation.citation_id == dbCitation.citation_id);
+
+                return Ok(updatedCitation);
             }
             catch (Exception e)
             {
@@ -172,7 +176,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Citation>>> DeleteCitation(int id)
+        public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
             {
@@ -183,7 +187,7 @@ namespace CitationWebAPI.Controllers
                 _context.Citations.Remove(dbCitation); // Delete citation
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Citations.ToListAsync());
+                return Ok("Successfully deleted citation");
             } 
             catch (Exception e)
             {

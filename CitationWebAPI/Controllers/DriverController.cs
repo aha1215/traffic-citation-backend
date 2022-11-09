@@ -120,7 +120,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Driver>>> DeleteDriver(int id)
+        public async Task<ActionResult<Driver>> DeleteDriver(int id)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace CitationWebAPI.Controllers
                 _context.Drivers.Remove(dbDriver); // Delete driver
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Drivers.ToListAsync());
+                return Ok("Successfully deleted driver");
             }
             catch (Exception e)
             {

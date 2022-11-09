@@ -49,14 +49,16 @@ namespace CitationWebAPI.Controllers
 
         // Posts a new violation to database
         [HttpPost]
-        public async Task<ActionResult<List<Violation>>> CreateViolation(Violation violation)
+        public async Task<ActionResult<Violation>> CreateViolation(Violation violation)
         {
             try
             {
                 _context.Violations.Add(violation);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Violations.ToListAsync());
+                var createdViolation = await _context.Violations.FirstOrDefaultAsync(nViolation => nViolation.violation_id == violation.violation_id);
+
+                return Ok(createdViolation);
             }
             catch(Exception e)
             {
@@ -65,7 +67,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Citation>>> UpdateViolation(Violation violation)
+        public async Task<ActionResult<Violation>> UpdateViolation(Violation violation)
         {
             try
             {
@@ -81,7 +83,9 @@ namespace CitationWebAPI.Controllers
 
                 await _context.SaveChangesAsync(); // Save updated violation
 
-                return Ok(await _context.Violations.ToListAsync());
+                var updatedViolation = await _context.Violations.FirstOrDefaultAsync(nViolation => nViolation.violation_id == dbViolation.violation_id);
+
+                return Ok(updatedViolation);
             }
             catch (Exception e)
             {
@@ -90,7 +94,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Violation>>> DeleteViolation(int id)
+        public async Task<ActionResult<Violation>> DeleteViolation(int id)
         {
             try
             {
@@ -101,7 +105,7 @@ namespace CitationWebAPI.Controllers
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Violations.ToListAsync());
+                return Ok("Successfully deleted violation");
             }
             catch (Exception e)
             {
