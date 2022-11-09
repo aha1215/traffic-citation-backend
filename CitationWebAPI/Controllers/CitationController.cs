@@ -57,7 +57,7 @@ namespace CitationWebAPI.Controllers
                 // If requesting more than 50 pages default to 50
                 pageSize = pageSize > 50 ? 50 : pageSize;
                 // Page number must be greater than 0
-                pageNumber = pageNumber < 1 ? 1 : pageNumber + 1;
+                pageNumber = pageNumber < 1 ? 1 : pageNumber;
 
                 var totalCitationsCount = await _context.Citations.CountAsync();
                 var pageCount = Math.Ceiling(_context.Citations.Count() / pageSize);
