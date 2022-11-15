@@ -1,6 +1,7 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
+        [Authorize(Policy = "read")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -32,6 +34,7 @@ namespace CitationWebAPI.Controllers
 
         // Get citation by id
         [HttpGet("{id}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<Citation>> GetCitationById(int id)
         {
             try
@@ -50,6 +53,7 @@ namespace CitationWebAPI.Controllers
 
         // Request a range of citations for pagination
         [HttpGet("{pageNumber}/{pageSize}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize)
         {
             try
@@ -95,6 +99,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
@@ -114,6 +119,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
@@ -140,6 +146,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
@@ -176,6 +183,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try

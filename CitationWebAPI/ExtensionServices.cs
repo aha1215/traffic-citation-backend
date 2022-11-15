@@ -1,7 +1,10 @@
-﻿using CitationWebAPI.Data;
+﻿using System.Security.Claims;
+using CitationWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CitationWebAPI
 {
@@ -34,6 +37,30 @@ namespace CitationWebAPI
             .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190")
             .AllowAnyMethod()
             .AllowAnyHeader()));
+        }
+
+        public static void AddAuthAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = domain;
+                    options.Audience = builder.Configuration["Auth0:Audience"];
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
+        }
+
+        public static void AddAuthAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read", policy => policy.RequireClaim("permissions", "read:citations"));
+                options.AddPolicy("write", policy => policy.RequireClaim("permissions", "read:citations", "write:citations"));
+            });
         }
 
         public static void AddSwaggerGenTypes(this IServiceCollection services)

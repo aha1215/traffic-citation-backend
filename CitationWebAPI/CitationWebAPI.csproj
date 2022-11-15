@@ -10,6 +10,8 @@
     
     <PackageReference Include="DateOnlyTimeOnly.AspNet" Version="1.0.3" />
     
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
+    
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
