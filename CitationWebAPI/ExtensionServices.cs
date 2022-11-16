@@ -34,7 +34,8 @@ namespace CitationWebAPI
         public static void ConfigureCors(this IServiceCollection services)
         {
             services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins", policy => policy
-            .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190")
+            .WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:8080", "https://localhost:8080", 
+            "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190", "http://localhost:7190")
             .AllowAnyMethod()
             .AllowAnyHeader()));
         }
@@ -45,8 +46,8 @@ namespace CitationWebAPI
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = domain;
-                    options.Audience = builder.Configuration["Auth0:Audience"];
+                    options.Authority = "https://dev-3k36-3cg.us.auth0.com/";
+                    options.Audience = "https://traffic-citation-backend.herokuapp.com/api";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = ClaimTypes.NameIdentifier
@@ -60,6 +61,10 @@ namespace CitationWebAPI
             {
                 options.AddPolicy("read", policy => policy.RequireClaim("permissions", "read:citations"));
                 options.AddPolicy("write", policy => policy.RequireClaim("permissions", "read:citations", "write:citations"));
+                options.AddPolicy("write-delete", policy => policy.RequireClaim("permissions", "read:citations", "write:citations", "delete:citations"));
+                options.AddPolicy("read-all", policy => policy.RequireClaim("permissions", "read:all-citations"));
+
+
             });
         }
 

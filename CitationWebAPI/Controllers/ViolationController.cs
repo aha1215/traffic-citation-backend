@@ -1,5 +1,6 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all violations from database
         [HttpGet]
+        [Authorize(Policy = "read-all")]
         public async Task<ActionResult<List<Violation>>> GetViolations()
         {
             try
@@ -31,6 +33,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{citation_id}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<List<Violation>>> GetViolationsByCitationId(int citation_id)
         {
             try
@@ -49,6 +52,7 @@ namespace CitationWebAPI.Controllers
 
         // Posts a new violation to database
         [HttpPost]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Violation>> CreateViolation(Violation violation)
         {
             try
@@ -67,6 +71,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Violation>> UpdateViolation(Violation violation)
         {
             try
@@ -94,6 +99,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "write-delete")]
         public async Task<ActionResult<Violation>> DeleteViolation(int id)
         {
             try

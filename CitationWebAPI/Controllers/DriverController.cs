@@ -1,5 +1,6 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all drivers from database
         [HttpGet]
+        [Authorize(Policy = "read-all")]
         public async Task<ActionResult<List<Driver>>> GetDrivers()
         {
             try
@@ -30,6 +32,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("license/{license_no}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<Driver>> GetDriverByLicenseNo(string license_no)
         {
             try
@@ -49,6 +52,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<Driver>> GetDriverById(int id)
         {
             try
@@ -66,6 +70,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Driver>> CreateDriver(Driver driver)
         {
             try
@@ -85,6 +90,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Driver>> UpdateDriver(Driver driver)
         {
             try
@@ -116,10 +122,10 @@ namespace CitationWebAPI.Controllers
             {
                 return BadRequest(e.ToString());
             }
-
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "write-delete")]
         public async Task<ActionResult<Driver>> DeleteDriver(int id)
         {
             try

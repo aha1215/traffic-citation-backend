@@ -19,7 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
-        [Authorize(Policy = "read")] 
+        [Authorize(Policy = "read-all")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -183,7 +183,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "write")]
+        [Authorize(Policy = "write-delete")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try

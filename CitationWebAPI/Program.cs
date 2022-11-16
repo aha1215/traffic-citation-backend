@@ -28,9 +28,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CitationOrigins");
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 

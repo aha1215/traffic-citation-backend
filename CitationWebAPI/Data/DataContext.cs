@@ -17,7 +17,6 @@ namespace CitationWebAPI.Data
         // Create entity set (table) used by Entity Framework Core
         public DbSet<Citation> Citations => Set<Citation>();
         public DbSet<Driver> Drivers => Set<Driver>();
-        public DbSet<User> Users => Set<User>();
         public DbSet<Violation> Violations => Set<Violation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
