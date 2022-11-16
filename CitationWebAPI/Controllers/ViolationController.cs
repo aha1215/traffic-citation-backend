@@ -1,5 +1,6 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all violations from database
         [HttpGet]
+        [Authorize(Policy = "read-all")]
         public async Task<ActionResult<List<Violation>>> GetViolations()
         {
             try
@@ -31,6 +33,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{citation_id}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<List<Violation>>> GetViolationsByCitationId(int citation_id)
         {
             try
@@ -49,14 +52,17 @@ namespace CitationWebAPI.Controllers
 
         // Posts a new violation to database
         [HttpPost]
-        public async Task<ActionResult<List<Violation>>> CreateViolation(Violation violation)
+        [Authorize(Policy = "write")]
+        public async Task<ActionResult<Violation>> CreateViolation(Violation violation)
         {
             try
             {
                 _context.Violations.Add(violation);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Violations.ToListAsync());
+                var createdViolation = await _context.Violations.FirstOrDefaultAsync(nViolation => nViolation.violation_id == violation.violation_id);
+
+                return Ok(createdViolation);
             }
             catch(Exception e)
             {
@@ -65,7 +71,8 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Citation>>> UpdateViolation(Violation violation)
+        [Authorize(Policy = "write")]
+        public async Task<ActionResult<Violation>> UpdateViolation(Violation violation)
         {
             try
             {
@@ -81,7 +88,9 @@ namespace CitationWebAPI.Controllers
 
                 await _context.SaveChangesAsync(); // Save updated violation
 
-                return Ok(await _context.Violations.ToListAsync());
+                var updatedViolation = await _context.Violations.FirstOrDefaultAsync(nViolation => nViolation.violation_id == dbViolation.violation_id);
+
+                return Ok(updatedViolation);
             }
             catch (Exception e)
             {
@@ -90,7 +99,8 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Violation>>> DeleteViolation(int id)
+        [Authorize(Policy = "write-delete")]
+        public async Task<ActionResult<Violation>> DeleteViolation(int id)
         {
             try
             {
@@ -101,7 +111,7 @@ namespace CitationWebAPI.Controllers
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Violations.ToListAsync());
+                return Ok("Successfully deleted violation");
             }
             catch (Exception e)
             {

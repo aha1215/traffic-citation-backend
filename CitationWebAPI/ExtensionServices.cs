@@ -1,7 +1,10 @@
-﻿using CitationWebAPI.Data;
+﻿using System.Security.Claims;
+using CitationWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CitationWebAPI
 {
@@ -31,9 +34,38 @@ namespace CitationWebAPI
         public static void ConfigureCors(this IServiceCollection services)
         {
             services.AddCors(opt => opt.AddPolicy(name: "CitationOrigins", policy => policy
-            .WithOrigins("http://localhost:4200", "http://localhost:8080", "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190")
+            .WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:8080", "https://localhost:8080", 
+            "https://traffic-citation-frontend.herokuapp.com", "https://localhost:7190", "http://localhost:7190")
             .AllowAnyMethod()
             .AllowAnyHeader()));
+        }
+
+        public static void AddAuthAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://dev-3k36-3cg.us.auth0.com/";
+                    options.Audience = "https://traffic-citation-backend.herokuapp.com/api";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
+        }
+
+        public static void AddAuthAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read", policy => policy.RequireClaim("permissions", "read:citations"));
+                options.AddPolicy("write", policy => policy.RequireClaim("permissions", "read:citations", "write:citations"));
+                options.AddPolicy("write-delete", policy => policy.RequireClaim("permissions", "read:citations", "write:citations", "delete:citations"));
+                options.AddPolicy("read-all", policy => policy.RequireClaim("permissions", "read:all-citations"));
+
+
+            });
         }
 
         public static void AddSwaggerGenTypes(this IServiceCollection services)

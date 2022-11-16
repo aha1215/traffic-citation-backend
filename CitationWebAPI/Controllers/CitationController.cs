@@ -1,6 +1,7 @@
 ﻿using CitationWebAPI.Data;
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
+        [Authorize(Policy = "read-all")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -32,6 +34,7 @@ namespace CitationWebAPI.Controllers
 
         // Get citation by id
         [HttpGet("{id}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<Citation>> GetCitationById(int id)
         {
             try
@@ -50,6 +53,7 @@ namespace CitationWebAPI.Controllers
 
         // Request a range of citations for pagination
         [HttpGet("{pageNumber}/{pageSize}")]
+        [Authorize(Policy = "read")]
         public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize)
         {
             try
@@ -95,14 +99,17 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Citation>>> CreateCitation(Citation citation)
+        [Authorize(Policy = "write")]
+        public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
             {
                 _context.Citations.Add(citation);
                 await _context.SaveChangesAsync(); // Adds citation to database
 
-                return Ok(await _context.Citations.ToListAsync());
+                var createdCitation = await _context.Citations.FirstOrDefaultAsync(nCitation => nCitation.citation_id == citation.citation_id);
+
+                return Ok(createdCitation);
             } 
             catch (Exception e)
             {
@@ -112,6 +119,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
+        [Authorize(Policy = "write")]
         public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
@@ -138,7 +146,8 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Citation>>> UpdateCitation(Citation citation)
+        [Authorize(Policy = "write")]
+        public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
             {
@@ -162,7 +171,9 @@ namespace CitationWebAPI.Controllers
 
                 await _context.SaveChangesAsync(); // Save updated citation
 
-                return Ok(await _context.Citations.ToListAsync());
+                var updatedCitation = await _context.Citations.FirstOrDefaultAsync(nCitation => nCitation.citation_id == dbCitation.citation_id);
+
+                return Ok(updatedCitation);
             }
             catch (Exception e)
             {
@@ -172,7 +183,8 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Citation>>> DeleteCitation(int id)
+        [Authorize(Policy = "write-delete")]
+        public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
             {
@@ -183,7 +195,7 @@ namespace CitationWebAPI.Controllers
                 _context.Citations.Remove(dbCitation); // Delete citation
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Citations.ToListAsync());
+                return Ok("Successfully deleted citation");
             } 
             catch (Exception e)
             {
