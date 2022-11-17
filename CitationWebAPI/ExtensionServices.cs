@@ -63,8 +63,6 @@ namespace CitationWebAPI
                 options.AddPolicy("write", policy => policy.RequireClaim("permissions", "read:citations", "write:citations"));
                 options.AddPolicy("write-delete", policy => policy.RequireClaim("permissions", "read:citations", "write:citations", "delete:citations"));
                 options.AddPolicy("read-all", policy => policy.RequireClaim("permissions", "read:all-citations"));
-
-
             });
         }
 

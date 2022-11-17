@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CitationWebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221019014231_Violation")]
-    partial class Violation
+    [Migration("20221117015744_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -67,8 +67,9 @@ namespace CitationWebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("integer");
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("vin")
                         .IsRequired()
@@ -128,6 +129,7 @@ namespace CitationWebAPI.Migrations
 
                     b.Property<string>("license_no")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("race")
@@ -150,39 +152,6 @@ namespace CitationWebAPI.Migrations
                     b.HasKey("driver_id");
 
                     b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("CitationWebAPI.Models.User", b =>
-                {
-                    b.Property<int>("user_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("user_id"));
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("officer_badge")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("officer_name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("user_id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CitationWebAPI.Models.Violation", b =>

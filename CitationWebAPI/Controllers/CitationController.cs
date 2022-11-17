@@ -4,6 +4,7 @@ using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace CitationWebAPI.Controllers
 {
@@ -52,23 +53,43 @@ namespace CitationWebAPI.Controllers
         }
 
         // Request a range of citations for pagination
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("{pageNumber}/{pageSize}/{userId}/{userRole}")]
         [Authorize(Policy = "read")]
-        public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize)
+        public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize, string userId, string userRole)
         {
             try
             {
+                userId = userId.Replace("%", "|"); // TODO: Don't do this...change later
+
                 // If requesting more than 50 pages default to 50
                 pageSize = pageSize > 50 ? 50 : pageSize;
                 // Page number must be greater than 0
                 pageNumber = pageNumber < 1 ? 1 : pageNumber;
 
-                var totalCitationsCount = await _context.Citations.CountAsync();
-                var pageCount = Math.Ceiling(_context.Citations.Count() / pageSize);
-                var citations = await _context.Citations
-                    .Skip((pageNumber - 1) * (int)pageSize)
-                    .Take((int)pageSize)
-                    .ToListAsync();
+                var totalCitationsCount = 0;
+                var citations = new List<Citation>();
+
+                if (userRole == "admin")
+                {
+                    // display all citations 
+                    totalCitationsCount = await _context.Citations.CountAsync();
+                    citations = await _context.Citations
+                        .Skip((pageNumber - 1) * (int)pageSize)
+                        .Take((int)pageSize)
+                        .ToListAsync();
+                } 
+                else if (userRole == "officer")
+                {
+                    // Find citations assigned to user by user id
+                    citations =  _context.Citations.Where(citation => citation.user_id == userId)
+                        .Skip((pageNumber - 1) * (int)pageSize)
+                        .Take((int)pageSize)
+                        .ToList();
+                    totalCitationsCount = citations.Count();
+                    
+                }
+
+                var pageCount = Math.Ceiling(totalCitationsCount / pageSize);
 
                 // Get the drivers associated with each citation
                 var drivers = new List<Driver>();
