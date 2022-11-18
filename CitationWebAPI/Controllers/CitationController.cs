@@ -205,7 +205,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
