@@ -60,7 +60,7 @@ namespace CitationWebAPI.Controllers
         {
             try
             {
-                userId = userId.Replace("%", "|"); // TODO: Don't do this...change later
+                userId = userId.Replace("%", "|"); // TODO: change this
 
                 // If requesting more than 50 pages default to 50
                 pageSize = pageSize > 50 ? 50 : pageSize;
@@ -86,7 +86,7 @@ namespace CitationWebAPI.Controllers
                         .Skip((pageNumber - 1) * (int)pageSize)
                         .Take((int)pageSize)
                         .ToList();
-                    totalCitationsCount = citations.Count();
+                    totalCitationsCount = _context.Citations.Where(citation => citation.user_id == userId).Count();
                     
                 }
 
