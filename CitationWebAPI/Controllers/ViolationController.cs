@@ -111,7 +111,7 @@ namespace CitationWebAPI.Controllers
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted violation");
+                return Ok();
             }
             catch (Exception e)
             {

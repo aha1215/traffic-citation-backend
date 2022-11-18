@@ -217,7 +217,7 @@ namespace CitationWebAPI.Controllers
                 _context.Citations.Remove(dbCitation); // Delete citation
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted citation");
+                return Ok();
             } 
             catch (Exception e)
             {

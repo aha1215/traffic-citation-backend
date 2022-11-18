@@ -137,7 +137,7 @@ namespace CitationWebAPI.Controllers
                 _context.Drivers.Remove(dbDriver); // Delete driver
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted driver");
+                return Ok();
             }
             catch (Exception e)
             {
