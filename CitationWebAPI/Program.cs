@@ -11,7 +11,7 @@ builder.Services
     .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
 builder.Services.AddAuthAuthentication(builder);
-builder.Services.AddAuthAuthorization();
+//builder.Services.AddAuthAuthorization();
 
 builder.Services.ConfigureCors();
 builder.Services.ConfigureDbContext(builder);
@@ -27,8 +27,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CitationOrigins");
-
-//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

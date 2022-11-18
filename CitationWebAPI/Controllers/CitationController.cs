@@ -2,6 +2,7 @@
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
@@ -20,7 +21,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
-        [Authorize(Policy = "read-all")] 
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -35,7 +36,7 @@ namespace CitationWebAPI.Controllers
 
         // Get citation by id
         [HttpGet("{id}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> GetCitationById(int id)
         {
             try
@@ -54,7 +55,7 @@ namespace CitationWebAPI.Controllers
 
         // Request a range of citations for pagination
         [HttpGet("{pageNumber}/{pageSize}/{userId}/{userRole}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize, string userId, string userRole)
         {
             try
@@ -68,8 +69,8 @@ namespace CitationWebAPI.Controllers
 
                 var totalCitationsCount = 0;
                 var citations = new List<Citation>();
-
-                if (userRole == "admin")
+                
+                if (userRole == "Admin")
                 {
                     // display all citations 
                     totalCitationsCount = await _context.Citations.CountAsync();
@@ -78,7 +79,7 @@ namespace CitationWebAPI.Controllers
                         .Take((int)pageSize)
                         .ToListAsync();
                 } 
-                else if (userRole == "officer")
+                else if (userRole == "Officer")
                 {
                     // Find citations assigned to user by user id
                     citations =  _context.Citations.Where(citation => citation.user_id == userId)
@@ -120,7 +121,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
@@ -140,7 +141,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
@@ -167,7 +168,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
@@ -204,7 +205,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "write-delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
