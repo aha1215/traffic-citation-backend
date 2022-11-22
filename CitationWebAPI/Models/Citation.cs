@@ -15,7 +15,7 @@ namespace CitationWebAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int citation_id { get; set; }
         public int driver_id { get; set; }
-        public int user_id { get; set; }
+        public string user_id { get; set; } = String.Empty;
         public string type { get; set; } = String.Empty;
         public DateOnly? date { get; set; }
         public TimeOnly? time { get; set; }

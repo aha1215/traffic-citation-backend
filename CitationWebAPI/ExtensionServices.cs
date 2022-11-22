@@ -42,7 +42,6 @@ namespace CitationWebAPI
 
         public static void AddAuthAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -50,12 +49,13 @@ namespace CitationWebAPI
                     options.Audience = "https://traffic-citation-backend.herokuapp.com/api";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        NameClaimType = ClaimTypes.NameIdentifier
+                        NameClaimType = "Roles",
+                        RoleClaimType = "dev-3k36-3cg.us.auth0.com/roles"
                     };
                 });
         }
 
-        public static void AddAuthAuthorization(this IServiceCollection services)
+        /*public static void AddAuthAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -63,10 +63,8 @@ namespace CitationWebAPI
                 options.AddPolicy("write", policy => policy.RequireClaim("permissions", "read:citations", "write:citations"));
                 options.AddPolicy("write-delete", policy => policy.RequireClaim("permissions", "read:citations", "write:citations", "delete:citations"));
                 options.AddPolicy("read-all", policy => policy.RequireClaim("permissions", "read:all-citations"));
-
-
             });
-        }
+        }*/
 
         public static void AddSwaggerGenTypes(this IServiceCollection services)
         {

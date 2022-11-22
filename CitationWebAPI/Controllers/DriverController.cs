@@ -18,7 +18,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all drivers from database
         [HttpGet]
-        [Authorize(Policy = "read-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Driver>>> GetDrivers()
         {
             try
@@ -32,7 +32,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("license/{license_no}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> GetDriverByLicenseNo(string license_no)
         {
             try
@@ -52,7 +52,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> GetDriverById(int id)
         {
             try
@@ -70,7 +70,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> CreateDriver(Driver driver)
         {
             try
@@ -90,7 +90,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> UpdateDriver(Driver driver)
         {
             try
@@ -125,7 +125,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "write-delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Driver>> DeleteDriver(int id)
         {
             try
@@ -137,7 +137,7 @@ namespace CitationWebAPI.Controllers
                 _context.Drivers.Remove(dbDriver); // Delete driver
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted driver");
+                return Ok();
             }
             catch (Exception e)
             {

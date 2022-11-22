@@ -19,7 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all violations from database
         [HttpGet]
-        [Authorize(Policy = "read-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Violation>>> GetViolations()
         {
             try
@@ -33,7 +33,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{citation_id}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<List<Violation>>> GetViolationsByCitationId(int citation_id)
         {
             try
@@ -52,7 +52,7 @@ namespace CitationWebAPI.Controllers
 
         // Posts a new violation to database
         [HttpPost]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> CreateViolation(Violation violation)
         {
             try
@@ -71,7 +71,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> UpdateViolation(Violation violation)
         {
             try
@@ -99,7 +99,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "write-delete")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> DeleteViolation(int id)
         {
             try
@@ -111,7 +111,7 @@ namespace CitationWebAPI.Controllers
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted violation");
+                return Ok();
             }
             catch (Exception e)
             {

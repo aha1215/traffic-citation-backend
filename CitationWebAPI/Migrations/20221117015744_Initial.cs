@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CitationWebAPI.Migrations
 {
-    public partial class InitialDatabase : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace CitationWebAPI.Migrations
                     citation_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     driver_id = table.Column<int>(type: "integer", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     type = table.Column<string>(type: "text", nullable: false),
                     date = table.Column<DateTime>(type: "date", nullable: true),
                     time = table.Column<TimeSpan>(type: "time", nullable: true),
@@ -63,20 +63,20 @@ namespace CitationWebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Violations",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(type: "integer", nullable: false)
+                    violation_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    officer_badge = table.Column<string>(type: "text", nullable: false),
-                    officer_name = table.Column<string>(type: "text", nullable: false)
+                    citation_id = table.Column<int>(type: "integer", nullable: false),
+                    group = table.Column<string>(type: "text", nullable: false),
+                    code = table.Column<string>(type: "text", nullable: false),
+                    degree = table.Column<string>(type: "text", nullable: false),
+                    desc = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.user_id);
+                    table.PrimaryKey("PK_Violations", x => x.violation_id);
                 });
         }
 
@@ -89,7 +89,7 @@ namespace CitationWebAPI.Migrations
                 name: "Drivers");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Violations");
         }
     }
 }

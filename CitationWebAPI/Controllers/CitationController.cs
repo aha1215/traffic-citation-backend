@@ -2,8 +2,10 @@
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace CitationWebAPI.Controllers
 {
@@ -19,7 +21,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
-        [Authorize(Policy = "read-all")] 
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -34,7 +36,7 @@ namespace CitationWebAPI.Controllers
 
         // Get citation by id
         [HttpGet("{id}")]
-        [Authorize(Policy = "read")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> GetCitationById(int id)
         {
             try
@@ -52,23 +54,43 @@ namespace CitationWebAPI.Controllers
         }
 
         // Request a range of citations for pagination
-        [HttpGet("{pageNumber}/{pageSize}")]
-        [Authorize(Policy = "read")]
-        public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize)
+        [HttpGet("{pageNumber}/{pageSize}/{userId}/{userRole}")]
+        [Authorize(Roles = "Admin, Officer")]
+        public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize, string userId, string userRole)
         {
             try
             {
+                userId = userId.Replace("%", "|"); // TODO: change this
+
                 // If requesting more than 50 pages default to 50
                 pageSize = pageSize > 50 ? 50 : pageSize;
                 // Page number must be greater than 0
                 pageNumber = pageNumber < 1 ? 1 : pageNumber;
 
-                var totalCitationsCount = await _context.Citations.CountAsync();
-                var pageCount = Math.Ceiling(_context.Citations.Count() / pageSize);
-                var citations = await _context.Citations
-                    .Skip((pageNumber - 1) * (int)pageSize)
-                    .Take((int)pageSize)
-                    .ToListAsync();
+                var totalCitationsCount = 0;
+                var citations = new List<Citation>();
+                
+                if (userRole == "Admin")
+                {
+                    // display all citations 
+                    totalCitationsCount = await _context.Citations.CountAsync();
+                    citations = await _context.Citations
+                        .Skip((pageNumber - 1) * (int)pageSize)
+                        .Take((int)pageSize)
+                        .ToListAsync();
+                } 
+                else if (userRole == "Officer")
+                {
+                    // Find citations assigned to user by user id
+                    citations =  _context.Citations.Where(citation => citation.user_id == userId)
+                        .Skip((pageNumber - 1) * (int)pageSize)
+                        .Take((int)pageSize)
+                        .ToList();
+                    totalCitationsCount = _context.Citations.Where(citation => citation.user_id == userId).Count();
+                    
+                }
+
+                var pageCount = Math.Ceiling(totalCitationsCount / pageSize);
 
                 // Get the drivers associated with each citation
                 var drivers = new List<Driver>();
@@ -99,7 +121,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
@@ -119,7 +141,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
@@ -146,7 +168,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "write")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
@@ -183,7 +205,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "write-delete")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
@@ -195,7 +217,7 @@ namespace CitationWebAPI.Controllers
                 _context.Citations.Remove(dbCitation); // Delete citation
                 await _context.SaveChangesAsync();
 
-                return Ok("Successfully deleted citation");
+                return Ok();
             } 
             catch (Exception e)
             {
