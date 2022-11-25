@@ -18,7 +18,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all drivers from database
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Driver>>> GetDrivers()
         {
             try
@@ -32,7 +32,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("license/{license_no}")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> GetDriverByLicenseNo(string license_no)
         {
             try
@@ -52,7 +52,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> GetDriverById(int id)
         {
             try
@@ -70,7 +70,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> CreateDriver(Driver driver)
         {
             try
@@ -90,7 +90,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Driver>> UpdateDriver(Driver driver)
         {
             try
@@ -125,7 +125,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<Driver>> DeleteDriver(int id)
         {
             try

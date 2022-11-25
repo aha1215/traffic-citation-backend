@@ -4,8 +4,10 @@ namespace CitationWebAPI.Dto
 {
     public class CitationResponse
     {
-        public List<Citation> Citations { get; set; } = new List<Citation>();
+        public List<CompleteCitation> CompleteCitationList { get; set; } = new List<CompleteCitation>();
+        /*public List<Citation> Citations { get; set; } = new List<Citation>();
         public List<Driver> Drivers { get; set; } = new List<Driver>();
+        public List<Violation> Violations { get; set; } = new List<Violation>();*/
         public int TotalCitationsCount { get; set; } // How many items in database
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }

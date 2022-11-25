@@ -10,7 +10,8 @@ builder.Services
     .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
     .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
-builder.Services.AddAuthAuthentication(builder);
+//builder.Services.AddAuthAuthentication(builder);
+
 //builder.Services.AddAuthAuthorization();
 
 builder.Services.ConfigureCors();
@@ -28,8 +29,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CitationOrigins");
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 
 app.MapControllers();

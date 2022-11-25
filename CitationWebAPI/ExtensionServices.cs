@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using CitationWebAPI.Data;
+﻿using CitationWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using System.Text.RegularExpressions;

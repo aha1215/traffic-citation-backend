@@ -2,10 +2,9 @@
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace CitationWebAPI.Controllers
 {
@@ -21,7 +20,7 @@ namespace CitationWebAPI.Controllers
 
         // Get all citations
         [HttpGet]
-        [Authorize(Roles = "Admin")] 
+        //[Authorize(Roles = "Admin")] 
         public async Task<ActionResult<List<Citation>>> GetCitations()
         {
             try
@@ -36,7 +35,7 @@ namespace CitationWebAPI.Controllers
 
         // Get citation by id
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> GetCitationById(int id)
         {
             try
@@ -53,9 +52,72 @@ namespace CitationWebAPI.Controllers
             }
         }
 
+        // FOR TESTING VIEW CITATIONS PAGE TO EDIT STYLING 
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<ActionResult<List<Citation>>> GetCitationsTest(int pageNumber, float pageSize)
+        {
+            try
+            {
+
+                // If requesting more than 50 pages default to 50
+                pageSize = pageSize > 50 ? 50 : pageSize;
+                // Page number must be greater than 0
+                pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
+                var totalCitationsCount = await _context.Citations.CountAsync();
+                var citations = await _context.Citations
+                    .OrderByDescending(x => x.sign_date)
+                    .Skip((pageNumber - 1) * (int)pageSize)
+                    .Take((int)pageSize)
+                    .ToListAsync();
+
+                var pageCount = Math.Ceiling(totalCitationsCount / pageSize);
+
+                // Link citations to their drivers/violations                
+                var completeCitationList = new List<CompleteCitation>();
+                foreach (var citation in citations)
+                {
+                    var completeCitation = new CompleteCitation();
+                    
+                    // Add citation
+                    completeCitation.citation = citation;
+
+                    // Find violations for citation
+                    var citationViolations = _context.Violations.Where(violation => violation.citation_id == citation.citation_id).ToList();
+                    if (citationViolations != null)
+                    {
+                        completeCitation.violations = citationViolations;
+                    }
+
+                    // Now find driver for citation
+                    var driver = _context.Drivers.FindAsync(citation.driver_id);
+                    if (driver.Result != null)
+                    {
+                        completeCitation.driver = driver.Result;
+                    }
+
+                    completeCitationList.Add(completeCitation);
+                }
+
+                var response = new CitationResponse
+                {
+                    CompleteCitationList = completeCitationList,
+                    TotalCitationsCount = totalCitationsCount,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)pageCount
+                };
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // Request a range of citations for pagination
         [HttpGet("{pageNumber}/{pageSize}/{userId}/{userRole}")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<List<Citation>>> GetCitations(int pageNumber, float pageSize, string userId, string userRole)
         {
             try
@@ -75,6 +137,7 @@ namespace CitationWebAPI.Controllers
                     // display all citations 
                     totalCitationsCount = await _context.Citations.CountAsync();
                     citations = await _context.Citations
+                        .OrderByDescending(x => x.sign_date)
                         .Skip((pageNumber - 1) * (int)pageSize)
                         .Take((int)pageSize)
                         .ToListAsync();
@@ -83,6 +146,7 @@ namespace CitationWebAPI.Controllers
                 {
                     // Find citations assigned to user by user id
                     citations =  _context.Citations.Where(citation => citation.user_id == userId)
+                        .OrderByDescending(x => x.sign_date)
                         .Skip((pageNumber - 1) * (int)pageSize)
                         .Take((int)pageSize)
                         .ToList();
@@ -92,21 +156,34 @@ namespace CitationWebAPI.Controllers
 
                 var pageCount = Math.Ceiling(totalCitationsCount / pageSize);
 
-                // Get the drivers associated with each citation
-                var drivers = new List<Driver>();
-                foreach (var element in citations)
+                // Link citations to their drivers/violations                
+                var completeCitationList = new List<CompleteCitation>();
+                foreach (var citation in citations)
                 {
-                    var driver = _context.Drivers.FindAsync(element.driver_id);
+                    var completeCitation = new CompleteCitation();
+
+                    // Add citation
+                    completeCitation.citation = citation;
+
+                    var citationViolations = _context.Violations.Where(violation => violation.citation_id == citation.citation_id).ToList();
+
+                    if (citationViolations != null)
+                    {
+                        completeCitation.violations = citationViolations;
+                    }
+
+                    // Now find driver for citation
+                    var driver = _context.Drivers.FindAsync(citation.driver_id);
                     if (driver.Result != null)
                     {
-                        drivers.Add(driver.Result);
+                        completeCitation.driver = driver.Result;
                     }
-                }
 
+                    completeCitationList.Add(completeCitation);
+                }
                 var response = new CitationResponse
                 {
-                    Citations = citations,
-                    Drivers = drivers,
+                    CompleteCitationList = completeCitationList,
                     TotalCitationsCount = totalCitationsCount,
                     CurrentPage = pageNumber,
                     TotalPages = (int)pageCount
@@ -121,7 +198,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitation(Citation citation)
         {
             try
@@ -141,7 +218,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPost("/api/CitationWithViolations")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> CreateCitationWithViolations(CitationWithViolations citation)
         {
             try
@@ -168,7 +245,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> UpdateCitation(Citation citation)
         {
             try
@@ -205,7 +282,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, Officer")]
+        //[Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Citation>> DeleteCitation(int id)
         {
             try
