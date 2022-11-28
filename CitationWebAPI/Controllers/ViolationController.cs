@@ -19,7 +19,7 @@ namespace CitationWebAPI.Controllers
 
         // Request all violations from database
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Violation>>> GetViolations()
         {
             try
@@ -33,7 +33,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpGet("{citation_id}")]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<List<Violation>>> GetViolationsByCitationId(int citation_id)
         {
             try
@@ -52,7 +52,7 @@ namespace CitationWebAPI.Controllers
 
         // Posts a new violation to database
         [HttpPost]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> CreateViolation(Violation violation)
         {
             try
@@ -71,7 +71,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> UpdateViolation(Violation violation)
         {
             try
@@ -99,7 +99,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpPut("violations")]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> UpdateViolations(List<Violation> violations)
         {
             try
@@ -136,7 +136,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> DeleteViolation(int id)
         {
             try
@@ -157,7 +157,7 @@ namespace CitationWebAPI.Controllers
         }
 
         [HttpDelete("violations")]
-        //[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> DeleteViolations(List<int> ids)
         {
             try
