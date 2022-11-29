@@ -2,10 +2,9 @@
 using CitationWebAPI.Dto;
 using CitationWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace CitationWebAPI.Controllers
 {
@@ -75,6 +74,7 @@ namespace CitationWebAPI.Controllers
                     // display all citations 
                     totalCitationsCount = await _context.Citations.CountAsync();
                     citations = await _context.Citations
+                        .OrderByDescending(x => x.sign_date)
                         .Skip((pageNumber - 1) * (int)pageSize)
                         .Take((int)pageSize)
                         .ToListAsync();
@@ -83,6 +83,7 @@ namespace CitationWebAPI.Controllers
                 {
                     // Find citations assigned to user by user id
                     citations =  _context.Citations.Where(citation => citation.user_id == userId)
+                        .OrderByDescending(x => x.sign_date)
                         .Skip((pageNumber - 1) * (int)pageSize)
                         .Take((int)pageSize)
                         .ToList();
@@ -92,21 +93,34 @@ namespace CitationWebAPI.Controllers
 
                 var pageCount = Math.Ceiling(totalCitationsCount / pageSize);
 
-                // Get the drivers associated with each citation
-                var drivers = new List<Driver>();
-                foreach (var element in citations)
+                // Link citations to their drivers/violations                
+                var completeCitationList = new List<CompleteCitation>();
+                foreach (var citation in citations)
                 {
-                    var driver = _context.Drivers.FindAsync(element.driver_id);
+                    var completeCitation = new CompleteCitation();
+
+                    // Add citation
+                    completeCitation.citation = citation;
+
+                    var citationViolations = _context.Violations.Where(violation => violation.citation_id == citation.citation_id).ToList();
+
+                    if (citationViolations != null)
+                    {
+                        completeCitation.violations = citationViolations;
+                    }
+
+                    // Now find driver for citation
+                    var driver = _context.Drivers.FindAsync(citation.driver_id);
                     if (driver.Result != null)
                     {
-                        drivers.Add(driver.Result);
+                        completeCitation.driver = driver.Result;
                     }
-                }
 
+                    completeCitationList.Add(completeCitation);
+                }
                 var response = new CitationResponse
                 {
-                    Citations = citations,
-                    Drivers = drivers,
+                    CompleteCitationList = completeCitationList,
                     TotalCitationsCount = totalCitationsCount,
                     CurrentPage = pageNumber,
                     TotalPages = (int)pageCount

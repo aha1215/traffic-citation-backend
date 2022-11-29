@@ -64,7 +64,7 @@ namespace CitationWebAPI.Controllers
 
                 return Ok(createdViolation);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -98,6 +98,43 @@ namespace CitationWebAPI.Controllers
             }
         }
 
+        [HttpPut("violations")]
+        [Authorize(Roles = "Admin, Officer")]
+        public async Task<ActionResult<Violation>> UpdateViolations(List<Violation> violations)
+        {
+            try
+            {
+                var updatedViolations = new List<Violation>();
+
+                foreach (var violation in violations)
+                {
+                    var dbViolation = await _context.Violations.FindAsync(violation.violation_id);
+                    if (dbViolation == null)
+                        return NotFound("Violation not found.");
+
+                    dbViolation.group = violation.group;
+                    dbViolation.code = violation.code;
+                    dbViolation.degree = violation.degree;
+                    dbViolation.desc = violation.desc;
+
+                    await _context.SaveChangesAsync(); // Save updated violation
+
+                    var updatedViolation = await _context.Violations.FirstOrDefaultAsync(nViolation => nViolation.violation_id == dbViolation.violation_id);
+                    
+                    if (updatedViolation != null)
+                    {
+                        updatedViolations.Add(updatedViolation);
+                    }
+                }
+
+                return Ok(updatedViolations);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin, Officer")]
         public async Task<ActionResult<Violation>> DeleteViolation(int id)
@@ -111,6 +148,30 @@ namespace CitationWebAPI.Controllers
                 _context.Violations.Remove(dbViolation);
                 await _context.SaveChangesAsync();
 
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
+        [HttpDelete("violations")]
+        [Authorize(Roles = "Admin, Officer")]
+        public async Task<ActionResult<Violation>> DeleteViolations(List<int> ids)
+        {
+            try
+            {
+                foreach (var id in ids)
+                {
+                    var dbViolation = await _context.Violations.FindAsync(id);
+                    if (dbViolation == null)
+                        return NotFound("Violation not found.");
+
+                    _context.Violations.Remove(dbViolation);
+                    await _context.SaveChangesAsync();
+                }
+                
                 return Ok();
             }
             catch (Exception e)

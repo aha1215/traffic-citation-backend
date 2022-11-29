@@ -11,6 +11,7 @@ builder.Services
     .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
 builder.Services.AddAuthAuthentication(builder);
+
 //builder.Services.AddAuthAuthorization();
 
 builder.Services.ConfigureCors();
