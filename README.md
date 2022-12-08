@@ -7,7 +7,8 @@ Database: PostgreSQL<br>
 CI/CD pipeline. Deployed on Heroku. [Using Jincod .NET Core Buildpack](https://github.com/jincod/dotnetcore-buildpack)<br>
 
 ## Database ERD
-![ERD](https://user-images.githubusercontent.com/80275985/199389587-d807de35-3ae5-4795-b875-378fadedf371.png)
+
+![ERD](https://user-images.githubusercontent.com/80275985/206373144-b9a9edf5-488c-4efe-a422-9f0bdd8e889f.png)
 
 <hr>
 
@@ -18,8 +19,11 @@ https://traffic-citation-backend.herokuapp.com<br>
 GET - Retrieve all citations<br>
 /api/Citation<br>
 
-GET - Retrieve citations based on page number and page size<br>
-/api/Citation/{pageNumber}/{pageSize}<br>
+GET - Retrieve list of citations for pagination based on page number, page size, user id, and user role<br>
+/api/Citation/{pageNumber}/{pageSize}/{userId}/{userRole}<br>
+
+POST - Create a citation with violations<br>
+/api/CitationWithViolations<br>
 
 POST - Create a citation<br>
 /api/Citation<br>
@@ -42,6 +46,9 @@ POST - Create a driver<br>
 PUT - Update a driver<br>
 /api/Driver<br>
 
+GET - Retrieve driver by license number<br>
+/api/Driver/license/{license_no}<br>
+
 GET - Retrieve driver by id<br>
 /api/Driver/{id}<br>
 
@@ -50,18 +57,27 @@ DELETE - Delete a driver by id<br>
 
 <hr>
 
-### User
-GET - Retrieve all users<br>
-/api/User<br>
+### Violation
+GET - Retrieve all violations<br>
+/api/Violation<br>
 
-POST - Create a new user<br>
-/api/User<br>
+POST - Create a violation<br>
+/api/Violation<br>
 
-PUT - Update a user<br>
-/api/User<br>
+PUT - Update a violation<br>
+/api/Violation<br>
 
-DELETE - Delete a user by id<br>
-/api/User/{id}<br>
+GET - Get violation by citation id<br>
+/api/Violation/{citation_id}<br>
+
+PUT - Update a list of violations<br>
+/api/Violation/violations<br>
+
+DELETE - Delete a list of violations<br>
+/api/Violation/violations<br>
+
+DELETE - Delete a violation by id<br>
+/api/Violation/{id}<br>
 
 <hr>
 
